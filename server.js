@@ -7,7 +7,9 @@ import recipeRoutes from "./routes/recipeRoutes.js"; // Import routes
 dotenv.config();
 
 const app = express();
-app.use(cors({ origin: "https://ai-recipe-generator-delta.vercel.app/" })); // Allow frontend requests
+
+// Update the CORS configuration to allow requests from your Vercel frontend
+app.use(cors({ origin: "https://ai-recipe-generator-delta.vercel.app/" })); // Vercel frontend URL
 app.use(express.json());
 
 // MongoDB Connection
