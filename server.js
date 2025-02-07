@@ -2,23 +2,26 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import recipeRoutes from "./routes/recipeRoutes.js"; // Import routes
+import recipeRoutes from "./routes/recipeRoutes.js";
 
 dotenv.config();
 
 const app = express();
 
-// Update the CORS configuration to allow requests from your Vercel frontend
-app.use(cors({ origin: "https://ai-recipe-generator-delta.vercel.app/" })); // Vercel frontend URL
+// Middleware
+app.use(cors({ origin: "*" })); // Allow all origins (or specify your frontend URL)
 app.use(express.json());
 
 // MongoDB Connection
-const mongoURI = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.oyul6ke.mongodb.net/your_db_name`;
+const mongoURI = process.env.MONGO_URI;
 
 mongoose
   .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => console.error("❌ MongoDB Connection Error:", err));
+  .catch((err) => {
+    console.error("❌ MongoDB Connection Error:", err);
+    process.exit(1); // Exit the process if MongoDB fails
+  });
 
 // Routes
 app.use("/api/recipes", recipeRoutes);
